@@ -13,28 +13,41 @@ def get_weather(url):
     else:
         print("error!")
 
-#pro.openweathermap.org/data/2.5/forecast/hourly?q=
-#api.openweathermap.org/data/2.5/weather?q=
-#{city name}&appid={API key}
+# 
+
+
+
 data = get_weather('http://api.openweathermap.org/data/2.5/forecast?q={}&units=metric&appid={}'.format(city, apikey))
 
 str_data = json.dumps(data)
 dict_data = json.loads(str_data)
 city_id = dict_data.get('city').get('id')
+city_name = dict_data.get('city').get('name')
+sunrise = datetime.fromtimestamp(int(dict_data.get('city').get('sunrise')))
+sunset = datetime.fromtimestamp(int(dict_data.get('city').get('sunset')))
+data = datetime.strftime(sunset,'%Y-%m-%d')
 print(city_id)
-#print(datetime.fromtimestamp(dict_data.get("dt")).date())
+print(city_name)
+print(sunrise)
+print(sunset)
+print(f"{data} - световой день составляет: {sunset-sunrise}\n")
 
-#print("tempriture",dict_data.get("main").get("temp"))
+
+data_str1 = []
+index =int(1) 
 try:
     for i in dict_data.get('list'):
-        print( i.get('dt_txt'), '{0:+3.0f}'.format(i.get('main').get('temp')) )
+        # print( i.get('dt_txt'),"  tempriture =",'{0:+1.0f}'.format(i.get('main').get('temp')),  
+        #                         "  feels_like =",'{0:+1.0f}'.format(i.get('main').get('feels_like')
+        #                        ))
+        data_str1 += ( (f"{index}") +" "+ i.get('dt_txt')+"  tempriture ="+(' {0:+1.0f}'.format(i.get('main').get('temp'))),
+                               "  feels_like ="+' {0:+1.0f}'.format(i.get('main').get('feels_like')))
+        index+=1
 except Exception as e:
     print("Exception (forecast):", e)
     pass
 
-try:
-    for i in range(0,dict_data.get('list'),5):
-        print( i.get('dt_txt'), '{0:+3.0f}'.format(i.get('main').get('temp')) )
-except Exception as e:
-    print("Exception (forecast):", e)
-    pass    
+for i in data_str1:
+    print(i)
+
+#print(data_str1)
